@@ -95,12 +95,29 @@
   },
   "entity": {
     "sensor": {
-      "remaining_time": {"name": "Resterende tijd"},
-      "expected_end": {"name": "Verwacht einde"},
-      "expected_duration": {"name": "Verwachte duur"},
-      "confidence": {"name": "Voorspellingszekerheid"},
-      "cycle_profile": {"name": "Cyclusprofiel"},
-      "learned_cycles": {"name": "Geleerde cycli"}
+      "remaining_time": {
+        "name": "Resterende tijd"
+      },
+      "expected_end": {
+        "name": "Verwacht einde"
+      },
+      "expected_duration": {
+        "name": "Verwachte duur"
+      },
+      "confidence": {
+        "name": "Voorspellingszekerheid"
+      },
+      "cycle_profile": {
+        "name": "Cyclusprofiel"
+      },
+      "learned_cycles": {
+        "name": "Geleerde cycli"
+      }
+    },
+    "button": {
+      "reset_learning": {
+        "name": "Leerdata wissen"
+      }
     }
   }
 }
