@@ -33,7 +33,9 @@ It uses the same learning concepts and remains a valid standalone option.
 
 The predictor is designed to provide a generic remaining-time source for [Washing Machine Animated Card](https://github.com/sionetta/wm_animated_ha_card).
 
-The upstream card does **not yet** expose its planned `remaining_entity` option in the current release. When that interface is available, the predictor's native remaining-time sensor is intended to plug into it directly. Until then, the predictor can still be used independently or with dashboards/custom card versions that support its entities.
+The upstream card does **not yet** expose its planned `remaining_entity` option in the current release. When that interface is available, the predictor's native remaining-time sensor is intended to plug into it directly.
+
+This repository also contains an [upstream-ready `remaining_entity` prototype](card-patch/README.md), based on the current upstream card. It keeps prediction logic outside the card and demonstrates the proposed generic interface for review/testing. It is **not** presented as an official card release.
 
 ## Why this project exists
 
