@@ -74,7 +74,8 @@ STABILITY_LATE = 2
 
 # Historical-data validation / contamination protection
 HISTORY_POINT_GRACE = 5
-MAX_ACTIVE_MINUTES = 600\nMAX_LEARN_DURATION = 360  # 6 hours; configurable safety limit for training data
+MAX_ACTIVE_MINUTES = 600
+MAX_LEARN_DURATION = 360  # 6 hours; configurable safety limit for training data
 
 # Predictor v2.3 training log.
 # The /config/pyscript/logs directory must exist.
@@ -432,7 +433,7 @@ def _sanitize_cycle(cycle):
     except Exception:
         return None, 0
 
-    if duration <= 0:
+    if duration <= 0 or duration > MAX_LEARN_DURATION:
         return None, 0
 
     cleaned = dict(cycle)
@@ -1126,7 +1127,11 @@ def _cycle_finish(kind):
     duration = _safe_float(c["last_duration"], 0.0)
     energy = _safe_float(c["last_energy"], 0.0)
 
-    if (\n        duration >= MIN_LEARN_DURATION\n        and duration <= MAX_LEARN_DURATION\n        and energy >= MIN_LEARN_ENERGY\n    ):
+    if (
+        duration >= MIN_LEARN_DURATION
+        and duration <= MAX_LEARN_DURATION
+        and energy >= MIN_LEARN_ENERGY
+    ):
         # Add a final measurement point when useful.
         if (
             duration >= CHECKPOINT_MINUTES
