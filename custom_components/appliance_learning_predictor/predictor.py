@@ -157,6 +157,12 @@ class AppliancePredictor:
         power = self._read_power_w()
         energy = self._read_energy_kwh()
 
+        # Never treat unavailable/unknown source sensors as zero. Doing so could
+        # falsely stop an active cycle and contaminate the learning history.
+        if power is None or energy is None:
+            self._notify()
+            return
+
         if self.mode == DETECTION_STATUS:
             running = self._status_entity_running()
             if running and not self.active:
@@ -603,14 +609,14 @@ class AppliancePredictor:
         running_states = {item.strip().lower() for item in configured.split(",") if item.strip()}
         return state.state.strip().lower() in running_states
 
-    def _read_power_w(self) -> float:
+    def _read_power_w(self) -> float | None:
         state = self.hass.states.get(self.power_entity)
-        if state is None:
-            return 0.0
+        if state is None or state.state in {"unknown", "unavailable", "none", ""}:
+            return None
         try:
             value = float(state.state)
         except (TypeError, ValueError):
-            return 0.0
+            return None
         unit = str(state.attributes.get("unit_of_measurement", "W")).lower()
         if unit == "kw":
             return value * 1000.0
@@ -618,20 +624,50 @@ class AppliancePredictor:
             return value * 1_000_000.0
         return value
 
-    def _read_energy_kwh(self) -> float:
+    def _read_energy_kwh(self) -> float | None:
         state = self.hass.states.get(self.energy_entity)
-        if state is None:
-            return 0.0
+        if state is None or state.state in {"unknown", "unavailable", "none", ""}:
+            return None
         try:
             value = float(state.state)
         except (TypeError, ValueError):
-            return 0.0
+            return None
         unit = str(state.attributes.get("unit_of_measurement", "kWh")).lower()
         if unit == "wh":
             return value / 1000.0
         if unit == "mwh":
             return value * 1000.0
         return value
+
+    async def async_reset_history(self) -> None:
+        """Clear learned cycle history without interrupting an active cycle."""
+        self.history = []
+        self.values["learned_cycles"] = 0
+        self._last_remaining = None
+        self.prediction_samples = []
+        if self.active:
+            self.values.update(
+                {
+                    "remaining_time": None,
+                    "expected_end": None,
+                    "expected_duration": None,
+                    "confidence": 0,
+                    "cycle_profile": "Learning",
+                }
+            )
+        else:
+            self.values.update(
+                {
+                    "remaining_time": None,
+                    "expected_end": None,
+                    "expected_duration": None,
+                    "confidence": 0,
+                    "cycle_profile": "Waiting for cycle",
+                }
+            )
+        await self._store.async_save(self._serialize())
+        self._notify()
+        _LOGGER.info("%s: learned cycle history cleared", self.name)
 
     def _serialize(self) -> dict[str, Any]:
         active: dict[str, Any] | None = None
