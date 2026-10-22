@@ -2,6 +2,7 @@
 
 ## Home Assistant integration 0.1.0
 
+- Prepared repository metadata for HACS validation.
 - Added a HACS-installable Home Assistant custom integration.
 - Added UI-based Config Flow and editable Options Flow.
 - Added automatic power-based cycle detection with configurable thresholds/delays.
