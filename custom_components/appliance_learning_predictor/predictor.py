@@ -118,7 +118,7 @@ class AppliancePredictor:
         if isinstance(active, dict):
             self._restore_active(active)
 
-        self._last_status_running = self._status_entity_running()
+        self._last_status_running = self._status_entity_running() or False
         await self.async_evaluate(dt_util.now())
         self._unsub_interval = async_track_time_interval(
             self.hass, self.async_evaluate, timedelta(seconds=POLL_SECONDS)
@@ -165,6 +165,10 @@ class AppliancePredictor:
 
         if self.mode == DETECTION_STATUS:
             running = self._status_entity_running()
+            if running is None:
+                # A missing/unavailable status source is not the same as "not running".
+                self._notify()
+                return
             if running and not self.active:
                 self._start_cycle(now, energy)
             elif not running and self.active:
@@ -596,18 +600,21 @@ class AppliancePredictor:
             cleaned.append(copy)
         return cleaned[-MAX_CYCLES:]
 
-    def _status_entity_running(self) -> bool:
+    def _status_entity_running(self) -> bool | None:
         if self.mode != DETECTION_STATUS:
             return False
         entity_id = self.config.get(CONF_STATUS_ENTITY)
         if not entity_id:
-            return False
+            return None
         state = self.hass.states.get(entity_id)
         if state is None:
-            return False
+            return None
+        raw_state = state.state.strip().lower()
+        if raw_state in {"unknown", "unavailable", "none", ""}:
+            return None
         configured = str(self.config.get(CONF_RUNNING_STATES, DEFAULT_RUNNING_STATES))
         running_states = {item.strip().lower() for item in configured.split(",") if item.strip()}
-        return state.state.strip().lower() in running_states
+        return raw_state in running_states
 
     def _read_power_w(self) -> float | None:
         state = self.hass.states.get(self.power_entity)
