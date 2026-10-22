@@ -1,0 +1,40 @@
+# Example Home Assistant helpers for the washer.
+# Add equivalent helpers for a dryer if needed.
+
+input_boolean:
+  washer_running:
+    name: Washer running
+
+input_datetime:
+  washer_last_start:
+    name: Washer last start
+    has_date: true
+    has_time: true
+  washer_last_end:
+    name: Washer last end
+    has_date: true
+    has_time: true
+
+input_number:
+  washer_energy_start:
+    name: Washer energy start
+    min: 0
+    max: 100000
+    step: 0.001
+    mode: box
+
+  washer_last_duration:
+    name: Washer last duration
+    min: 0
+    max: 600
+    step: 1
+    unit_of_measurement: min
+    mode: box
+
+  washer_last_energy:
+    name: Washer last energy
+    min: 0
+    max: 20
+    step: 0.001
+    unit_of_measurement: kWh
+    mode: box

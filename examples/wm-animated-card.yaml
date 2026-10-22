@@ -1,0 +1,16 @@
+# Example integration with wm_animated_ha_card.
+# `remaining_entity` is intended for the card's planned generic remaining-time support.
+# The extra predictor fields require a card version that supports those optional entities.
+
+type: custom:washing-machine-card
+appliance_type: washer
+status_entity: input_boolean.washer_running
+power_entity: sensor.washer_power
+
+# Generic remaining-time interface
+remaining_entity: pyscript.washer_remaining_time
+
+# Optional richer predictor outputs
+expected_end_entity: pyscript.washer_expected_end
+confidence_entity: pyscript.washer_prediction_confidence
+profile_entity: pyscript.washer_cycle_profile
