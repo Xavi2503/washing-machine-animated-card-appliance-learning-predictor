@@ -1,5 +1,17 @@
 # Changelog
 
+## Home Assistant integration 0.1.0
+
+- Added a HACS-installable Home Assistant custom integration.
+- Added UI-based Config Flow and editable Options Flow.
+- Added automatic power-based cycle detection with configurable thresholds/delays.
+- Added optional existing-status-entity cycle detection.
+- Added native sensors for remaining time, expected end, expected duration, confidence, profile and learned cycles.
+- Added persistent learning history using Home Assistant storage.
+- Added English and Dutch translations.
+- Added HACS and hassfest validation workflows.
+- Preserved the standalone Pyscript predictor as the advanced/manual installation path.
+
 ## 2.3
 
 - Added `MAX_LEARN_DURATION` safety limit for training data.

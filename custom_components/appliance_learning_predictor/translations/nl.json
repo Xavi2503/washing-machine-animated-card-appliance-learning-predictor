@@ -1,0 +1,106 @@
+{
+  "title": "Appliance Learning Predictor",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Voorspeller toevoegen",
+        "description": "Kies het apparaat en de vermogens- en energiesensor. Cyclusdetectie kan automatisch of via een bestaande status-entiteit.",
+        "data": {
+          "name": "Naam",
+          "appliance_type": "Apparaattype",
+          "power_entity": "Vermogenssensor",
+          "energy_entity": "Cumulatieve energiesensor",
+          "detection_mode": "Cyclusdetectie"
+        }
+      },
+      "power": {
+        "title": "Automatische cyclusdetectie",
+        "description": "Een cyclus start boven de startdrempel. Hij eindigt pas nadat het vermogen gedurende de ingestelde tijd onder de stopdrempel blijft. Een langere stoptijd voorkomt dat normale laagvermogensfases de cyclus te vroeg beëindigen.",
+        "data": {
+          "start_threshold": "Startdrempel",
+          "stop_threshold": "Stopdrempel",
+          "start_delay": "Startvertraging",
+          "stop_delay": "Stopvertraging",
+          "max_learn_duration": "Maximale cyclusduur om te leren"
+        }
+      },
+      "status": {
+        "title": "Cyclusdetectie via status-entiteit",
+        "description": "Gebruik een bestaande entiteit die betrouwbaar aangeeft of een cyclus actief is.",
+        "data": {
+          "status_entity": "Status-entiteit",
+          "running_states": "Statussen die actief betekenen (komma-gescheiden)",
+          "max_learn_duration": "Maximale cyclusduur om te leren"
+        }
+      }
+    },
+    "error": {
+      "threshold_order": "De startdrempel moet hoger zijn dan de stopdrempel."
+    },
+    "abort": {
+      "already_configured": "Dit apparaat is al geconfigureerd."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Instellingen voorspeller",
+        "data": {
+          "name": "Naam",
+          "appliance_type": "Apparaattype",
+          "power_entity": "Vermogenssensor",
+          "energy_entity": "Cumulatieve energiesensor",
+          "detection_mode": "Cyclusdetectie"
+        }
+      },
+      "power": {
+        "title": "Automatische cyclusdetectie",
+        "data": {
+          "start_threshold": "Startdrempel",
+          "stop_threshold": "Stopdrempel",
+          "start_delay": "Startvertraging",
+          "stop_delay": "Stopvertraging",
+          "max_learn_duration": "Maximale cyclusduur om te leren"
+        }
+      },
+      "status": {
+        "title": "Cyclusdetectie via status-entiteit",
+        "data": {
+          "status_entity": "Status-entiteit",
+          "running_states": "Statussen die actief betekenen (komma-gescheiden)",
+          "max_learn_duration": "Maximale cyclusduur om te leren"
+        }
+      }
+    },
+    "error": {
+      "threshold_order": "De startdrempel moet hoger zijn dan de stopdrempel."
+    }
+  },
+  "selector": {
+    "appliance_type": {
+      "options": {
+        "washer": "Wasmachine",
+        "dryer": "Droger",
+        "dishwasher": "Vaatwasser",
+        "oven": "Oven",
+        "microwave": "Magnetron"
+      }
+    },
+    "detection_mode": {
+      "options": {
+        "power": "Automatisch via vermogen",
+        "status": "Bestaande status-entiteit"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "remaining_time": {"name": "Resterende tijd"},
+      "expected_end": {"name": "Verwacht einde"},
+      "expected_duration": {"name": "Verwachte duur"},
+      "confidence": {"name": "Voorspellingszekerheid"},
+      "cycle_profile": {"name": "Cyclusprofiel"},
+      "learned_cycles": {"name": "Geleerde cycli"}
+    }
+  }
+}

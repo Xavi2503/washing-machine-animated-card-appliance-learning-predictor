@@ -1,0 +1,12 @@
+{
+  "codeowners": [
+    "@Xavi2503"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/Xavi2503/washing-machine-animated-card-appliance-learning-predictor",
+  "domain": "appliance_learning_predictor",
+  "issue_tracker": "https://github.com/Xavi2503/washing-machine-animated-card-appliance-learning-predictor/issues",
+  "name": "Appliance Learning Predictor",
+  "version": "0.1.0",
+  "integration_type": "helper"
+}

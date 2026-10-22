@@ -2,9 +2,38 @@
 
 A local learning predictor for Home Assistant appliances such as washing machines and dryers.
 
-The predictor runs in **Pyscript**, learns from completed cycles, compares the live power/energy pattern with historical cycles, and exposes optional entities that dashboards or Lovelace cards can display.
+The project provides both a **native Home Assistant/HACS integration** and an advanced **Pyscript** implementation. Both learn from completed cycles, compare the live power/energy pattern with historical cycles, and expose entities that dashboards or Lovelace cards can display.
 
 It is deliberately **UI-independent**: the predictor does the learning, while the card only displays the result.
+
+## Three ways to use this project
+
+### 1. HACS / Home Assistant integration — recommended
+
+For most users, install **Appliance Learning Predictor** as a Home Assistant custom integration through HACS.
+
+The setup wizard lets you:
+
+- choose the appliance type;
+- select the power and cumulative-energy sensors;
+- use automatic power-based cycle detection, or an existing status entity;
+- adjust start/stop thresholds and learning safety limits without editing Python.
+
+The integration creates native Home Assistant sensors for remaining time, expected end, expected duration, prediction confidence, cycle profile and learned cycles.
+
+See [HACS_INSTALLATION.md](HACS_INSTALLATION.md).
+
+### 2. Pyscript — advanced/manual
+
+The original `appliance_learning.py` remains available for advanced Home Assistant users who prefer complete control over helpers, cycle detection and entity IDs.
+
+It uses the same learning concepts and remains a valid standalone option.
+
+### 3. Washing Machine Animated Card integration
+
+The predictor is designed to provide a generic remaining-time source for [Washing Machine Animated Card](https://github.com/sionetta/wm_animated_ha_card).
+
+The upstream card does **not yet** expose its planned `remaining_entity` option in the current release. When that interface is available, the predictor's native remaining-time sensor is intended to plug into it directly. Until then, the predictor can still be used independently or with dashboards/custom card versions that support its entities.
 
 ## Why this project exists
 

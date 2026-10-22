@@ -1,0 +1,106 @@
+{
+  "title": "Appliance Learning Predictor",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add appliance predictor",
+        "description": "Choose the appliance and its power/energy sensors. Cycle detection can be automatic or use an existing status entity.",
+        "data": {
+          "name": "Name",
+          "appliance_type": "Appliance type",
+          "power_entity": "Power sensor",
+          "energy_entity": "Cumulative energy sensor",
+          "detection_mode": "Cycle detection"
+        }
+      },
+      "power": {
+        "title": "Automatic cycle detection",
+        "description": "A cycle starts above the start threshold. It ends only after power remains below the stop threshold for the configured delay. A longer stop delay prevents normal low-power phases from ending a cycle early.",
+        "data": {
+          "start_threshold": "Start threshold",
+          "stop_threshold": "Stop threshold",
+          "start_delay": "Start delay",
+          "stop_delay": "Stop delay",
+          "max_learn_duration": "Maximum cycle duration to learn"
+        }
+      },
+      "status": {
+        "title": "Status entity cycle detection",
+        "description": "Use an existing entity that reliably reports whether a cycle is active.",
+        "data": {
+          "status_entity": "Status entity",
+          "running_states": "States that mean running (comma-separated)",
+          "max_learn_duration": "Maximum cycle duration to learn"
+        }
+      }
+    },
+    "error": {
+      "threshold_order": "The start threshold must be higher than the stop threshold."
+    },
+    "abort": {
+      "already_configured": "This appliance is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Predictor settings",
+        "data": {
+          "name": "Name",
+          "appliance_type": "Appliance type",
+          "power_entity": "Power sensor",
+          "energy_entity": "Cumulative energy sensor",
+          "detection_mode": "Cycle detection"
+        }
+      },
+      "power": {
+        "title": "Automatic cycle detection",
+        "data": {
+          "start_threshold": "Start threshold",
+          "stop_threshold": "Stop threshold",
+          "start_delay": "Start delay",
+          "stop_delay": "Stop delay",
+          "max_learn_duration": "Maximum cycle duration to learn"
+        }
+      },
+      "status": {
+        "title": "Status entity cycle detection",
+        "data": {
+          "status_entity": "Status entity",
+          "running_states": "States that mean running (comma-separated)",
+          "max_learn_duration": "Maximum cycle duration to learn"
+        }
+      }
+    },
+    "error": {
+      "threshold_order": "The start threshold must be higher than the stop threshold."
+    }
+  },
+  "selector": {
+    "appliance_type": {
+      "options": {
+        "washer": "Washing machine",
+        "dryer": "Dryer",
+        "dishwasher": "Dishwasher",
+        "oven": "Oven",
+        "microwave": "Microwave"
+      }
+    },
+    "detection_mode": {
+      "options": {
+        "power": "Automatic from power",
+        "status": "Existing status entity"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "remaining_time": {"name": "Remaining time"},
+      "expected_end": {"name": "Expected end"},
+      "expected_duration": {"name": "Expected duration"},
+      "confidence": {"name": "Prediction confidence"},
+      "cycle_profile": {"name": "Cycle profile"},
+      "learned_cycles": {"name": "Learned cycles"}
+    }
+  }
+}
