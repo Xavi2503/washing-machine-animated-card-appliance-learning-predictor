@@ -1,0 +1,20 @@
+name: Card prototype syntax
+
+on:
+  push:
+    paths:
+      - "card-patch/**"
+      - ".github/workflows/card-prototype.yml"
+  pull_request:
+    paths:
+      - "card-patch/**"
+      - ".github/workflows/card-prototype.yml"
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check card-patch/washing-machine-card.js
