@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-import probatio
+import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_NAME
@@ -47,14 +47,14 @@ from .const import (
 )
 
 
-def _base_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
+def _base_schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
     defaults = defaults or {}
-    return probatio.Schema(
+    return vol.Schema(
         {
-            probatio.Required(CONF_NAME, default=defaults.get(CONF_NAME, "Washing machine")): TextSelector(
+            vol.Required(CONF_NAME, default=defaults.get(CONF_NAME, "Washing machine")): TextSelector(
                 TextSelectorConfig()
             ),
-            probatio.Required(
+            vol.Required(
                 CONF_APPLIANCE_TYPE,
                 default=defaults.get(CONF_APPLIANCE_TYPE, "washer"),
             ): SelectSelector(
@@ -65,16 +65,16 @@ def _base_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
                 )
             ),
             (
-                probatio.Required(CONF_POWER_ENTITY, default=defaults[CONF_POWER_ENTITY])
+                vol.Required(CONF_POWER_ENTITY, default=defaults[CONF_POWER_ENTITY])
                 if CONF_POWER_ENTITY in defaults
-                else probatio.Required(CONF_POWER_ENTITY)
+                else vol.Required(CONF_POWER_ENTITY)
             ): EntitySelector(EntitySelectorConfig(domain="sensor")),
             (
-                probatio.Required(CONF_ENERGY_ENTITY, default=defaults[CONF_ENERGY_ENTITY])
+                vol.Required(CONF_ENERGY_ENTITY, default=defaults[CONF_ENERGY_ENTITY])
                 if CONF_ENERGY_ENTITY in defaults
-                else probatio.Required(CONF_ENERGY_ENTITY)
+                else vol.Required(CONF_ENERGY_ENTITY)
             ): EntitySelector(EntitySelectorConfig(domain="sensor")),
-            probatio.Required(
+            vol.Required(
                 CONF_DETECTION_MODE,
                 default=defaults.get(CONF_DETECTION_MODE, DETECTION_POWER),
             ): SelectSelector(
@@ -88,11 +88,11 @@ def _base_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
     )
 
 
-def _power_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
+def _power_schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
     defaults = defaults or {}
-    return probatio.Schema(
+    return vol.Schema(
         {
-            probatio.Required(
+            vol.Required(
                 CONF_START_THRESHOLD,
                 default=defaults.get(CONF_START_THRESHOLD, DEFAULT_START_THRESHOLD),
             ): NumberSelector(
@@ -104,7 +104,7 @@ def _power_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
                     mode=NumberSelectorMode.BOX,
                 )
             ),
-            probatio.Required(
+            vol.Required(
                 CONF_STOP_THRESHOLD,
                 default=defaults.get(CONF_STOP_THRESHOLD, DEFAULT_STOP_THRESHOLD),
             ): NumberSelector(
@@ -116,7 +116,7 @@ def _power_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
                     mode=NumberSelectorMode.BOX,
                 )
             ),
-            probatio.Required(
+            vol.Required(
                 CONF_START_DELAY,
                 default=defaults.get(CONF_START_DELAY, DEFAULT_START_DELAY),
             ): NumberSelector(
@@ -128,7 +128,7 @@ def _power_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
                     mode=NumberSelectorMode.BOX,
                 )
             ),
-            probatio.Required(
+            vol.Required(
                 CONF_STOP_DELAY,
                 default=defaults.get(CONF_STOP_DELAY, DEFAULT_STOP_DELAY),
             ): NumberSelector(
@@ -140,7 +140,7 @@ def _power_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
                     mode=NumberSelectorMode.BOX,
                 )
             ),
-            probatio.Required(
+            vol.Required(
                 CONF_MAX_LEARN_DURATION,
                 default=defaults.get(CONF_MAX_LEARN_DURATION, DEFAULT_MAX_LEARN_DURATION),
             ): NumberSelector(
@@ -156,22 +156,22 @@ def _power_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
     )
 
 
-def _status_schema(defaults: dict[str, Any] | None = None) -> probatio.Schema:
+def _status_schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
     defaults = defaults or {}
-    return probatio.Schema(
+    return vol.Schema(
         {
             (
-                probatio.Required(CONF_STATUS_ENTITY, default=defaults[CONF_STATUS_ENTITY])
+                vol.Required(CONF_STATUS_ENTITY, default=defaults[CONF_STATUS_ENTITY])
                 if CONF_STATUS_ENTITY in defaults
-                else probatio.Required(CONF_STATUS_ENTITY)
+                else vol.Required(CONF_STATUS_ENTITY)
             ): EntitySelector(
                 EntitySelectorConfig(domain=["binary_sensor", "input_boolean", "sensor"])
             ),
-            probatio.Required(
+            vol.Required(
                 CONF_RUNNING_STATES,
                 default=defaults.get(CONF_RUNNING_STATES, DEFAULT_RUNNING_STATES),
             ): TextSelector(TextSelectorConfig()),
-            probatio.Required(
+            vol.Required(
                 CONF_MAX_LEARN_DURATION,
                 default=defaults.get(CONF_MAX_LEARN_DURATION, DEFAULT_MAX_LEARN_DURATION),
             ): NumberSelector(
