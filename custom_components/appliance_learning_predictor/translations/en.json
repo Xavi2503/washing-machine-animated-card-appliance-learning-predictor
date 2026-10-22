@@ -95,12 +95,29 @@
   },
   "entity": {
     "sensor": {
-      "remaining_time": {"name": "Remaining time"},
-      "expected_end": {"name": "Expected end"},
-      "expected_duration": {"name": "Expected duration"},
-      "confidence": {"name": "Prediction confidence"},
-      "cycle_profile": {"name": "Cycle profile"},
-      "learned_cycles": {"name": "Learned cycles"}
+      "remaining_time": {
+        "name": "Remaining time"
+      },
+      "expected_end": {
+        "name": "Expected end"
+      },
+      "expected_duration": {
+        "name": "Expected duration"
+      },
+      "confidence": {
+        "name": "Prediction confidence"
+      },
+      "cycle_profile": {
+        "name": "Cycle profile"
+      },
+      "learned_cycles": {
+        "name": "Learned cycles"
+      }
+    },
+    "button": {
+      "reset_learning": {
+        "name": "Reset learned data"
+      }
     }
   }
 }
