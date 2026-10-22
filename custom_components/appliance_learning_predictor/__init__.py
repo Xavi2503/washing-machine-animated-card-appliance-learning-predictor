@@ -8,7 +8,7 @@ from homeassistant.core import HomeAssistant
 
 from .predictor import AppliancePredictor
 
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.SENSOR, Platform.BUTTON]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
