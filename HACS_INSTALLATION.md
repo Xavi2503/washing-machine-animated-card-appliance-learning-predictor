@@ -49,6 +49,7 @@ The integration automatically creates entities for:
 - Prediction confidence (%)
 - Cycle profile
 - Learned cycles
+- Reset learned data button
 
 The **Remaining time** sensor is the primary generic output intended for cards such as Washing Machine Animated Card.
 
