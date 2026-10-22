@@ -79,39 +79,52 @@ Smart plug / appliance sensors
 Any Lovelace card / dashboard
 ```
 
-The predictor **does not start or stop appliances** and does not decide when a physical appliance is finished. Your Home Assistant setup should provide a reliable `input_boolean` (or equivalent helper) representing whether the appliance cycle is active.
+The predictor **never controls the appliance**. In the recommended native integration it can detect cycle start/end from the power sensor itself, or it can follow an existing Home Assistant status entity. The advanced Pyscript version leaves cycle detection entirely to your own helpers/automations.
 
-## Requirements
+## Quick start — HACS / native integration
 
-- Home Assistant
-- [Pyscript](https://github.com/custom-components/pyscript) installed through HACS
-- A power sensor in watts
-- A cumulative energy sensor in kWh
-- A reliable cycle-running helper
-- Helpers for start/end time, last duration, cycle energy start and last cycle energy
+Requirements:
 
-## Installation
+- Home Assistant with HACS;
+- a power sensor (normally W);
+- a cumulative energy sensor (normally kWh).
 
-1. Install Pyscript through HACS and add the Pyscript integration to Home Assistant.
-2. Create the helpers and sensors referenced in the `MACHINES` mapping, or change that mapping to your own entity IDs.
-3. Create the directory:
+Installation:
 
-   ```text
-   /config/pyscript/logs/
-   ```
+1. Add this repository to HACS as a custom **Integration** repository.
+2. Install **Appliance Learning Predictor** and restart Home Assistant.
+3. Go to **Settings → Devices & services → Add integration → Appliance Learning Predictor**.
+4. Choose the appliance, power sensor and cumulative-energy sensor.
+5. Choose either **Automatic from power** or **Existing status entity** for cycle detection.
 
-4. Copy `appliance_learning.py` to:
+Automatic detection defaults to **50 W start**, **15 W stop**, **10 s start delay** and **15 min stop delay**. The long stop delay deliberately protects against normal low-power phases inside washer programs. When that delay completes, the detected end is backdated to the beginning of the low-power period.
 
-   ```text
-   /config/pyscript/appliance_learning.py
-   ```
+The integration creates native Home Assistant entities for remaining time, expected end, expected duration, confidence, cycle profile and learned cycles, plus a **Reset learned data** button.
 
-5. Reload/restart Pyscript.
-6. Verify that the `pyscript.*` output entities are created.
+Full instructions: [HACS_INSTALLATION.md](HACS_INSTALLATION.md).
+
+## Advanced installation — Pyscript
+
+The original Pyscript implementation remains available for users who want complete control over entity IDs and cycle-detection automations.
+
+Requirements:
+
+- [Pyscript](https://github.com/custom-components/pyscript);
+- power and cumulative-energy sensors;
+- a reliable external cycle-running helper;
+- helpers for start/end time, last duration, cycle energy start and last cycle energy.
+
+Installation:
+
+1. Install Pyscript through HACS and add the Pyscript integration.
+2. Create the helpers referenced in the `MACHINES` mapping, or change that mapping to your own entity IDs.
+3. Create `/config/pyscript/logs/`.
+4. Copy `appliance_learning.py` to `/config/pyscript/appliance_learning.py`.
+5. Reload/restart Pyscript and verify that the `pyscript.*` entities appear.
 
 See [`examples/helpers.yaml`](examples/helpers.yaml) for helper examples.
 
-## Configuration
+## Pyscript configuration
 
 Configuration is intentionally kept in one mapping at the top of `appliance_learning.py`:
 
@@ -141,9 +154,11 @@ MACHINES = {
 
 Change only the entity IDs you need. A dryer mapping is included in the script as well.
 
-## Output entities
+## Pyscript output entities
 
-For the example washer mapping, the predictor creates:
+The native HACS integration creates equivalent Home Assistant sensor entities automatically; their final entity IDs follow the name chosen during setup.
+
+For the example Pyscript washer mapping, the predictor creates:
 
 | Entity | Purpose |
 | --- | --- |
@@ -165,7 +180,9 @@ Its state is a number of **minutes**, which is suitable for a future generic `re
 
 ## Example card integration
 
-A future stock card that accepts a remaining-time entity could use:
+With the native integration, select its generated **Remaining time** sensor as the card's `remaining_entity`. With Pyscript, the equivalent entity can be used directly.
+
+A stock card with `remaining_entity` support could use:
 
 ```yaml
 type: custom:washing-machine-card
@@ -186,7 +203,7 @@ See [`examples/wm-animated-card.yaml`](examples/wm-animated-card.yaml).
 
 ## How learning works
 
-Every minute, the script samples the active appliance. Every five minutes it creates a checkpoint containing:
+The predictor samples the active appliance regularly. Every five minutes it creates a learning checkpoint containing:
 
 - elapsed minutes
 - cycle energy used so far
@@ -208,16 +225,13 @@ More detail is available in [`docs/how-it-works.md`](docs/how-it-works.md).
 
 ## Safety against bad cycle detection
 
-The predictor depends on the external `running` helper being accurate. A stuck helper can otherwise make two physical cycles look like one very long cycle.
+Bad cycle boundaries can contaminate learning data by making two physical cycles look like one very long cycle.
 
-Version 2.3 therefore adds two protections:
+Both implementations therefore reject unrealistic long cycles. The Pyscript v2.3 implementation also sanitizes previously stored training history, while the native integration applies its configurable maximum learned-cycle duration before storing a completed cycle.
 
-- active runtimes above `MAX_ACTIVE_MINUTES` are flagged as invalid;
-- completed cycles above `MAX_LEARN_DURATION` (default: 360 minutes) are **not learned** and are removed from historical training data during sanitization.
+In automatic power-detection mode, the native integration additionally uses separate start/stop thresholds and a deliberately long low-power stop delay. This helps distinguish a real finish from temporary low-power phases inside a cycle.
 
-This protects the model from accidental merged cycles while still allowing long appliance programs.
-
-`MAX_LEARN_DURATION` is deliberately configurable because appliance behavior varies.
+The maximum learned-cycle duration remains configurable because appliance behavior varies.
 
 ## CSV prediction log
 
