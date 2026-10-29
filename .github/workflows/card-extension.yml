@@ -1,0 +1,19 @@
+name: Card extension prototype
+
+on:
+  push:
+    paths:
+      - "card-extension/**"
+      - ".github/workflows/card-extension.yml"
+  pull_request:
+    paths:
+      - "card-extension/**"
+      - ".github/workflows/card-extension.yml"
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check card-extension/washing-machine-card-predictor-extension.js
